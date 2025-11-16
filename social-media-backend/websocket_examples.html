@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social Media Feed - WebSocket Examples</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .status {
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .connected { background-color: #d4edda; color: #155724; }
+        .disconnected { background-color: #f8d7da; color: #721c24; }
+        .message {
+            background: #f8f9fa;
+            border-left: 4px solid #007bff;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        .notification {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        button:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+        }
+        input {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin: 5px;
+        }
+        #messages {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Social Media Feed - WebSocket Examples</h1>
+    
+    <div class="container">
+        <h2>Connection Status</h2>
+        <div id="status" class="status disconnected">Disconnected</div>
+        <button onclick="connectFeed()">Connect to Feed</button>
+        <button onclick="disconnect()">Disconnect</button>
+    </div>
+
+    <div class="container">
+        <h2>Real-time Notifications</h2>
+        <p>Enter your user ID to receive real-time notifications:</p>
+        <input type="number" id="userId" placeholder="User ID" value="1">
+        <button onclick="connectNotifications()">Connect Notifications</button>
+        <div id="notifications"></div>
+    </div>
+
+    <div class="container">
+        <h2>Post Updates</h2>
+        <p>Enter a post ID to receive real-time updates for that post:</p>
+        <input type="number" id="postId" placeholder="Post ID" value="1">
+        <button onclick="connectPost()">Connect Post Updates</button>
+        <div id="postUpdates"></div>
+    </div>
+
+    <div class="container">
+        <h2>Messages</h2>
+        <div id="messages"></div>
+        <button onclick="clearMessages()">Clear Messages</button>
+    </div>
+
+    <script>
+        let feedSocket = null;
+        let notificationSocket = null;
+        let postSocket = null;
+
+        function addMessage(type, content) {
+            const messagesDiv = document.getElementById('messages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = type;
+            messageDiv.innerHTML = `<strong>${new Date().toLocaleTimeString()}</strong>: ${JSON.stringify(content, null, 2)}`;
+            messagesDiv.appendChild(messageDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        function updateStatus(elementId, status, text) {
+            const statusDiv = document.getElementById(elementId);
+            statusDiv.className = `status ${status}`;
+            statusDiv.textContent = text;
+        }
+
+        function connectFeed() {
+            if (feedSocket) {
+                feedSocket.close();
+            }
+
+            feedSocket = new WebSocket('ws://localhost:8000/ws/feed/');
+            
+            feedSocket.onopen = function(e) {
+                updateStatus('status', 'connected', 'Connected to Feed');
+                addMessage('message', 'Connected to feed WebSocket');
+            };
+
+            feedSocket.onmessage = function(e) {
+                const data = JSON.parse(e.data);
+                addMessage('message', `Feed Update: ${data.type}`);
+                
+                if (data.type === 'new_post') {
+                    addMessage('notification', `New post by ${data.data.author.username}: ${data.data.content.substring(0, 50)}...`);
+                }
+            };
+
+            feedSocket.onclose = function(e) {
+                updateStatus('status', 'disconnected', 'Disconnected from Feed');
+                addMessage('message', 'Disconnected from feed WebSocket');
+            };
+
+            feedSocket.onerror = function(error) {
+                updateStatus('status', 'disconnected', 'Connection Error');
+                addMessage('message', `Feed WebSocket error: ${error}`);
+            };
+        }
+
+        function connectNotifications() {
+            const userId = document.getElementById('userId').value;
+            if (!userId) {
+                alert('Please enter a user ID');
+                return;
+            }
+
+            if (notificationSocket) {
+                notificationSocket.close();
+            }
+
+            notificationSocket = new WebSocket(`ws://localhost:8000/ws/notifications/${userId}/`);
+            
+            notificationSocket.onopen = function(e) {
+                addMessage('message', `Connected to notifications for user ${userId}`);
+            };
+
+            notificationSocket.onmessage = function(e) {
+                const data = JSON.parse(e.data);
+                const notificationsDiv = document.getElementById('notifications');
+                const notificationDiv = document.createElement('div');
+                notificationDiv.className = 'notification';
+                notificationDiv.innerHTML = `
+                    <strong>${data.type.toUpperCase()}</strong>: ${data.data.message}<br>
+                    <small>${new Date().toLocaleTimeString()}</small>
+                `;
+                notificationsDiv.appendChild(notificationDiv);
+                
+                addMessage('message', `Notification: ${data.type} - ${data.data.message}`);
+            };
+
+            notificationSocket.onclose = function(e) {
+                addMessage('message', `Disconnected from notifications for user ${userId}`);
+            };
+
+            notificationSocket.onerror = function(error) {
+                addMessage('message', `Notification WebSocket error: ${error}`);
+            };
+        }
+
+        function connectPost() {
+            const postId = document.getElementById('postId').value;
+            if (!postId) {
+                alert('Please enter a post ID');
+                return;
+            }
+
+            if (postSocket) {
+                postSocket.close();
+            }
+
+            postSocket = new WebSocket(`ws://localhost:8000/ws/post/${postId}/`);
+            
+            postSocket.onopen = function(e) {
+                addMessage('message', `Connected to post ${postId} updates`);
+            };
+
+            postSocket.onmessage = function(e) {
+                const data = JSON.parse(e.data);
+                const postUpdatesDiv = document.getElementById('postUpdates');
+                const updateDiv = document.createElement('div');
+                updateDiv.className = 'message';
+                updateDiv.innerHTML = `
+                    <strong>${data.type.toUpperCase()}</strong><br>
+                    Likes: ${data.data.likes_count || 'N/A'}<br>
+                    Comments: ${data.data.comments_count || 'N/A'}<br>
+                    <small>${new Date().toLocaleTimeString()}</small>
+                `;
+                postUpdatesDiv.appendChild(updateDiv);
+                
+                addMessage('message', `Post ${postId} Update: ${data.type}`);
+            };
+
+            postSocket.onclose = function(e) {
+                addMessage('message', `Disconnected from post ${postId} updates`);
+            };
+
+            postSocket.onerror = function(error) {
+                addMessage('message', `Post WebSocket error: ${error}`);
+            };
+        }
+
+        function disconnect() {
+            if (feedSocket) {
+                feedSocket.close();
+                feedSocket = null;
+            }
+            if (notificationSocket) {
+                notificationSocket.close();
+                notificationSocket = null;
+            }
+            if (postSocket) {
+                postSocket.close();
+                postSocket = null;
+            }
+            updateStatus('status', 'disconnected', 'Disconnected');
+        }
+
+        function clearMessages() {
+            document.getElementById('messages').innerHTML = '';
+            document.getElementById('notifications').innerHTML = '';
+            document.getElementById('postUpdates').innerHTML = '';
+        }
+
+        // Auto-connect to feed on page load
+        window.onload = function() {
+            connectFeed();
+        };
+
+        // Cleanup on page unload
+        window.onbeforeunload = function() {
+            disconnect();
+        };
+    </script>
+</body>
+</html>
