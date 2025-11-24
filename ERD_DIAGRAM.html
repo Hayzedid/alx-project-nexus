@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social Media Backend - ERD</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 40px;
+            font-size: 1.1em;
+        }
+        .mermaid {
+            display: flex;
+            justify-content: center;
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            overflow-x: auto;
+        }
+        .legend {
+            background: #f0f4ff;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 30px;
+        }
+        .legend h3 {
+            margin-top: 0;
+            color: #667eea;
+        }
+        .legend-item {
+            margin: 10px 0;
+            font-size: 0.95em;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: white;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #667eea;
+            color: white;
+            font-weight: bold;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .section-title {
+            font-size: 1.3em;
+            color: #667eea;
+            margin-top: 30px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+        .export-section {
+            margin-top: 40px;
+            padding: 20px;
+            background: #fff3cd;
+            border-radius: 8px;
+            border-left: 4px solid #ffc107;
+        }
+        .export-section h3 {
+            margin-top: 0;
+            color: #856404;
+        }
+        .export-section ol {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+        .export-section li {
+            margin: 8px 0;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Social Media Backend</h1>
+        <p class="subtitle">Entity Relationship Diagram (ERD)</p>
+
+        <div class="mermaid">
+erDiagram
+    USER ||--o{ POST : creates
+    USER ||--o{ LIKE : gives
+    USER ||--o{ COMMENT : writes
+    USER ||--o{ COMMENT_LIKE : gives
+    USER ||--o{ SHARE : performs
+    USER ||--o{ FOLLOW : initiates
+    USER ||--o{ FOLLOW : receives
+    USER ||--o{ POST_VIEW : records
+    POST ||--o{ POST_MEDIA : contains
+    POST ||--o{ LIKE : receives
+    POST ||--o{ COMMENT : has
+    POST ||--o{ SHARE : receives
+    POST ||--o{ POST_VIEW : receives
+    COMMENT ||--o{ COMMENT_LIKE : receives
+    COMMENT ||--o{ COMMENT : replies_to
+
+    USER {
+        int id PK
+        string email UK
+        string username UK
+        text bio
+        string profile_picture
+        int followers_count
+        int following_count
+        int posts_count
+        boolean is_verified
+        datetime created_at
+        datetime updated_at
+    }
+
+    POST {
+        int id PK
+        int author_id FK
+        text content
+        string content_type
+        string privacy_level
+        int likes_count
+        int comments_count
+        int shares_count
+        boolean is_pinned
+        boolean is_edited
+        datetime created_at
+        datetime updated_at
+    }
+
+    POST_MEDIA {
+        int id PK
+        int post_id FK
+        string media_type
+        string file
+        string thumbnail
+        int order
+        datetime created_at
+    }
+
+    LIKE {
+        int id PK
+        int user_id FK
+        int post_id FK
+        datetime created_at
+    }
+
+    COMMENT {
+        int id PK
+        int user_id FK
+        int post_id FK
+        int parent_id FK
+        text content
+        int likes_count
+        boolean is_edited
+        datetime created_at
+        datetime updated_at
+    }
+
+    COMMENT_LIKE {
+        int id PK
+        int user_id FK
+        int comment_id FK
+        datetime created_at
+    }
+
+    SHARE {
+        int id PK
+        int user_id FK
+        int post_id FK
+        string share_type
+        text caption
+        datetime created_at
+    }
+
+    FOLLOW {
+        int id PK
+        int follower_id FK
+        int following_id FK
+        datetime created_at
+    }
+
+    POST_VIEW {
+        int id PK
+        int user_id FK
+        int post_id FK
+        datetime viewed_at
+        string ip_address
+    }
+        </div>
+    </div>
+</body>
+</html>
