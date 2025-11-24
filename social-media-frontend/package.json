@@ -1,0 +1,22 @@
+{
+  "name": "social-media-frontend",
+  "version": "1.0.0",
+  "description": "Social Media Frontend - GraphQL + Vanilla JS",
+  "main": "index.html",
+  "scripts": {
+    "start": "python -m http.server 3000",
+    "dev": "python -m http.server 3000",
+    "build": "echo 'No build needed for static HTML'",
+    "deploy": "netlify deploy --prod --dir=."
+  },
+  "keywords": [
+    "social-media",
+    "graphql",
+    "frontend"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^1.6.0"
+  }
+}

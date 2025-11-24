@@ -4,8 +4,8 @@ services:
     runtime: python
     plan: free
     buildCommand: >
+      pip install -r requirements.txt &&
       cd social-media-backend &&
-      pip install -r ../requirements.txt &&
       python manage.py collectstatic --noinput &&
       python manage.py migrate
     startCommand: >

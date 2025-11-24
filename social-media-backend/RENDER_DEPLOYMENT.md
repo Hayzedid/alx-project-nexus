@@ -4,12 +4,12 @@
 
 ### Build Command
 ```bash
-cd social-media-backend && pip install -r ../requirements.txt && python manage.py collectstatic --noinput && python manage.py migrate
+pip install -r requirements.txt && cd social-media-backend && python manage.py collectstatic --noinput && python manage.py migrate
 ```
 
 **What it does:**
-1. `cd social-media-backend` - Changes to the Django app directory
-2. `pip install -r ../requirements.txt` - Installs all Python dependencies from root
+1. `pip install -r requirements.txt` - Installs all Python dependencies from root
+2. `cd social-media-backend` - Changes to the Django app directory
 3. `python manage.py collectstatic --noinput` - Collects static files (CSS, JS, images)
 4. `python manage.py migrate` - Runs database migrations
 
@@ -295,7 +295,7 @@ EMAIL_HOST_PASSWORD=your-app-password
 
 **Build Command (Copy-Paste):**
 ```
-cd social-media-backend && pip install -r ../requirements.txt && python manage.py collectstatic --noinput && python manage.py migrate
+pip install -r requirements.txt && cd social-media-backend && python manage.py collectstatic --noinput && python manage.py migrate
 ```
 
 **Start Command (Copy-Paste):**

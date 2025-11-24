@@ -18,7 +18,7 @@ Created `/requirements.txt` in the project root with all dependencies including:
 
 **New Build Command:**
 ```bash
-cd social-media-backend && pip install -r ../requirements.txt && python manage.py collectstatic --noinput && python manage.py migrate
+pip install -r requirements.txt && cd social-media-backend && python manage.py collectstatic --noinput && python manage.py migrate
 ```
 
 **New Start Command:**
@@ -28,6 +28,8 @@ cd social-media-backend && gunicorn social_feed_api.wsgi:application --bind 0.0.
 
 ### 3. Updated render.yaml
 Updated `/render.yaml` with correct paths to handle subdirectory structure.
+
+**Key fix:** Install dependencies FIRST from root, THEN change to subdirectory for Django commands.
 
 ---
 
@@ -46,7 +48,7 @@ git push origin main
 2. Click "Settings" → "Build & Deploy"
 3. Update **Build Command:**
    ```
-   cd social-media-backend && pip install -r ../requirements.txt && python manage.py collectstatic --noinput && python manage.py migrate
+   pip install -r requirements.txt && cd social-media-backend && python manage.py collectstatic --noinput && python manage.py migrate
    ```
 4. Update **Start Command:**
    ```
