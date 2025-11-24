@@ -174,3 +174,62 @@ PostgreSQL + Redis
 - Frontend: [URL]
 
 **GitHub:** https://github.com/Hayzedid/alx-project-nexus
+
+---
+
+## Slide Notes for Presenter
+
+### Slide 1
+- Show project title
+- Mention it's a full-stack application
+
+### Slide 2
+- Highlight the 9 entities
+- Mention real-time capabilities
+
+### Slide 3
+- Explain each layer
+- Show data flow
+
+### Slide 4
+- Show ERD diagram
+- Explain relationships
+
+### Slide 5
+- Show GraphQL examples
+- Explain advantages over REST
+
+### Slide 6
+- Emphasize security measures
+- Show JWT flow
+
+### Slide 7
+- Demo each feature
+- Show real-time updates
+
+### Slide 8
+- Highlight modern tech choices
+- Explain why each tool
+
+### Slide 9
+- Show code examples
+- Explain architecture decisions
+
+### Slide 10
+- Show live deployment
+- Demo the application
+- Share GitHub link
+
+---
+
+## Tips for Presentation
+
+1. **Keep it concise** - Each slide ~2-3 minutes
+2. **Use visuals** - Add screenshots/diagrams
+3. **Live demo** - Show the API working
+4. **Engage audience** - Ask questions
+5. **Highlight learning** - Show what you learned
+
+---
+
+**Total Duration:** 15-20 minutes for full presentation
