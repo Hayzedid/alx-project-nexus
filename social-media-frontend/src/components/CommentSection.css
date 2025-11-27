@@ -1,0 +1,156 @@
+.comment-section {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.comment-form {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.comment-input {
+  flex: 1;
+  background: rgba(30, 41, 59, 0.5);
+  border: 1px solid var(--border-color);
+  padding: 0.75rem 1rem;
+  border-radius: 20px;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  transition: all 0.3s;
+}
+
+.comment-input:focus {
+  border-color: var(--primary-color);
+  background: rgba(30, 41, 59, 0.8);
+}
+
+.comment-submit {
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 20px;
+  font-weight: 600;
+  transition: all 0.3s;
+}
+
+.comment-submit:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.comment-submit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.comments-list {
+  max-height: 400px;
+  overflow-y: auto;
+  padding-right: 0.5rem;
+}
+
+.loading-comments,
+.no-comments {
+  text-align: center;
+  padding: 1.5rem;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.comment {
+  display: flex;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  margin-bottom: 0.75rem;
+  background: rgba(30, 41, 59, 0.3);
+  border-radius: 8px;
+  transition: all 0.3s;
+}
+
+.comment:hover {
+  background: rgba(30, 41, 59, 0.5);
+}
+
+.comment-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  border: 2px solid var(--primary-color);
+}
+
+.comment-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.comment .avatar-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: white;
+}
+
+.comment-content {
+  flex: 1;
+}
+
+.comment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.25rem;
+}
+
+.comment-author {
+  font-weight: 600;
+  color: var(--primary-color);
+  font-size: 0.9rem;
+}
+
+.comment-time {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.comment-text {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--text-primary);
+  line-height: 1.5;
+  word-wrap: break-word;
+}
+
+/* Scrollbar for comments */
+.comments-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.comments-list::-webkit-scrollbar-track {
+  background: rgba(30, 41, 59, 0.3);
+  border-radius: 3px;
+}
+
+.comments-list::-webkit-scrollbar-thumb {
+  background: var(--primary-color);
+  border-radius: 3px;
+}
+
+@media (max-width: 768px) {
+  .comment-form {
+    flex-direction: column;
+  }
+
+  .comment-submit {
+    width: 100%;
+  }
+}

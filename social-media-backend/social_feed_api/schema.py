@@ -293,13 +293,15 @@ class RegisterUser(graphene.Mutation):
 
     def mutate(self, info, input):
         try:
+            # Create user with explicit first_name and last_name (default to empty string)
             user = User.objects.create_user(
                 username=input.username,
                 email=input.email,
                 password=input.password,
                 first_name=getattr(input, 'first_name', ''),
-                last_name=getattr(input, 'last_name', ''),
+                last_name=getattr(input, 'last_name', '')
             )
+            
             return RegisterUser(user=user, success=True, message="User registered successfully")
         except Exception as e:
             return RegisterUser(success=False, message=str(e))
@@ -314,7 +316,16 @@ class LoginUser(graphene.Mutation):
     message = graphene.String()
 
     def mutate(self, info, input):
+        # Try authenticating with username first, then email
         user = authenticate(username=input.username, password=input.password)
+        if user is None:
+            # Try with email if username didn't work
+            try:
+                user_obj = User.objects.get(username=input.username)
+                user = authenticate(username=user_obj.email, password=input.password)
+            except User.DoesNotExist:
+                pass
+        
         if user is not None:
             login(info.context, user)
             return LoginUser(user=user, success=True, message="Login successful")
@@ -352,27 +363,9 @@ class CreatePost(graphene.Mutation):
             media_url=input.media_url or ''
         )
         
-        # Send real-time update to feed
-        from .consumers import broadcast_new_post
-        import asyncio
-        asyncio.create_task(broadcast_new_post({
-            'id': str(post.id),
-            'content': post.content,
-            'content_type': post.content_type,
-            'privacy_level': post.privacy_level,
-            'media_url': post.media_url,
-            'author': {
-                'id': post.author.id,
-                'username': post.author.username,
-                'full_name': post.author.get_full_name(),
-                'profile_picture': post.author.profile_picture.url if post.author.profile_picture else None
-            },
-            'created_at': post.created_at.isoformat(),
-            'likes_count': post.likes_count,
-            'comments_count': post.comments_count,
-            'shares_count': post.shares_count
-        }))
-
+        # TODO: Implement real-time updates via WebSocket when needed
+        # For now, skip the asyncio broadcast to avoid event loop issues
+        
         return CreatePost(post=post, success=True, message="Post created successfully")
 
 
@@ -401,54 +394,11 @@ class LikePost(graphene.Mutation):
                 post.likes_count = Like.objects.filter(post=post).count()
                 post.save()
                 is_liked = False
-                
-                # Send real-time update
-                from .consumers import update_post_likes
-                import asyncio
-                asyncio.create_task(update_post_likes(
-                    post_id,
-                    {
-                        'post_id': str(post.id),
-                        'likes_count': post.likes_count,
-                        'is_liked': False,
-                        'user_id': info.context.user.id,
-                        'username': info.context.user.username
-                    }
-                ))
             else:
                 # Like the post
                 post.likes_count = Like.objects.filter(post=post).count()
                 post.save()
                 is_liked = True
-                
-                # Send real-time update
-                from .consumers import update_post_likes, send_like_notification
-                import asyncio
-                
-                # Update post likes count
-                asyncio.create_task(update_post_likes(
-                    post_id,
-                    {
-                        'post_id': str(post.id),
-                        'likes_count': post.likes_count,
-                        'is_liked': True,
-                        'user_id': info.context.user.id,
-                        'username': info.context.user.username
-                    }
-                ))
-                
-                # Send notification to post author (if not liking own post)
-                if post.author != info.context.user:
-                    asyncio.create_task(send_like_notification(
-                        post.author.id,
-                        {
-                            'post_id': str(post.id),
-                            'user_id': info.context.user.id,
-                            'username': info.context.user.username,
-                            'full_name': info.context.user.get_full_name(),
-                            'message': f'{info.context.user.username} liked your post'
-                        }
-                    ))
                 
             return LikePost(success=True, message="Like status updated", is_liked=is_liked)
             
@@ -483,44 +433,6 @@ class CreateComment(graphene.Mutation):
             
             post.comments_count += 1
             post.save()
-            
-            # Send real-time update
-            from .consumers import update_post_comments, send_comment_notification
-            import asyncio
-            
-            # Update post comments count
-            asyncio.create_task(update_post_comments(
-                str(post.id),
-                {
-                    'post_id': str(post.id),
-                    'comments_count': post.comments_count,
-                    'comment': {
-                        'id': str(comment.id),
-                        'content': comment.content,
-                        'author': {
-                            'id': info.context.user.id,
-                            'username': info.context.user.username,
-                            'full_name': info.context.user.get_full_name()
-                        },
-                        'created_at': comment.created_at.isoformat(),
-                        'parent_id': str(parent.id) if parent else None
-                    }
-                }
-            ))
-            
-            # Send notification to post author (if not commenting on own post)
-            if post.author != info.context.user:
-                asyncio.create_task(send_comment_notification(
-                    post.author.id,
-                    {
-                        'post_id': str(post.id),
-                        'user_id': info.context.user.id,
-                        'username': info.context.user.username,
-                        'full_name': info.context.user.get_full_name(),
-                        'message': f'{info.context.user.username} commented on your post',
-                        'comment_content': comment.content[:50] + '...' if len(comment.content) > 50 else comment.content
-                    }
-                ))
             
             return CreateComment(comment=comment, success=True, message="Comment created")
             
@@ -587,6 +499,49 @@ class FollowUser(graphene.Mutation):
             return FollowUser(success=False, message="User not found", is_following=False)
 
 
+class SharePost(graphene.Mutation):
+    class Arguments:
+        post_id = graphene.ID(required=True)
+
+    success = graphene.Boolean()
+    message = graphene.String()
+    shares_count = graphene.Int()
+
+    def mutate(self, info, post_id):
+        if not info.context.user.is_authenticated:
+            return SharePost(success=False, message="Authentication required", shares_count=0)
+        
+        try:
+            post = Post.objects.get(id=post_id)
+            
+            # Create or get share record
+            share, created = Share.objects.get_or_create(
+                user=info.context.user,
+                post=post
+            )
+            
+            if created:
+                # Increment share count
+                post.shares_count = Share.objects.filter(post=post).count()
+                post.save()
+                
+                return SharePost(
+                    success=True,
+                    message="Post shared successfully",
+                    shares_count=post.shares_count
+                )
+            else:
+                # Already shared
+                return SharePost(
+                    success=True,
+                    message="Post already shared",
+                    shares_count=post.shares_count
+                )
+            
+        except Post.DoesNotExist:
+            return SharePost(success=False, message="Post not found", shares_count=0)
+
+
 class Mutation(graphene.ObjectType):
     # Authentication mutations
     register_user = RegisterUser.Field()
@@ -597,6 +552,7 @@ class Mutation(graphene.ObjectType):
     create_post = CreatePost.Field()
     like_post = LikePost.Field()
     create_comment = CreateComment.Field()
+    share_post = SharePost.Field()
     follow_user = FollowUser.Field()
 
 

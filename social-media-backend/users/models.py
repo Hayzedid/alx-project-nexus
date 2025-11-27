@@ -3,6 +3,10 @@ from django.contrib.auth.models import AbstractUser
 
 
 class User(AbstractUser):
+    # Override first_name and last_name to make them optional in database
+    first_name = models.CharField(max_length=150, blank=True, null=True, default='')
+    last_name = models.CharField(max_length=150, blank=True, null=True, default='')
+    
     email = models.EmailField(unique=True)
     bio = models.TextField(max_length=500, blank=True)
     profile_picture = models.ImageField(upload_to='profile_pics/', blank=True)
