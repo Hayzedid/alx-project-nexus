@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, ChangeEvent } from "react";
 import { useQuery } from "@apollo/client";
 import { motion, AnimatePresence } from "framer-motion";
 import { GET_POST_COMMENTS } from "../graphql/queries";
@@ -38,12 +38,12 @@ const CommentSection = ({ postId, onAddComment }: CommentSectionProps) => {
         <input
           type="text"
           value={commentText}
-          onChange={(e) => setCommentText(e.target.value)}
+          onChange={(e: ChangeEvent<HTMLInputElement>) => setCommentText(e.target.value)}
           placeholder="Write a comment..."
           className="comment-input"
         />
         <button
-          type="submit"
+          type={'submit' as 'submit'}
           className="comment-submit"
           disabled={!commentText.trim()}
         >

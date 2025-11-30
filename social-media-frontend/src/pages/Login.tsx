@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, ChangeEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useAuth } from "../context/AuthContext";
@@ -59,7 +59,7 @@ const Login = () => {
               <input
                 type="text"
                 value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                onChange={(e: ChangeEvent<HTMLInputElement>) => setUsername(e.target.value)}
                 placeholder="Enter your username or email"
                 required
                 autoFocus
@@ -71,13 +71,13 @@ const Login = () => {
               <input
                 type="password"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e: ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
                 placeholder="Enter your password"
                 required
               />
             </div>
 
-            <button type="submit" className="auth-btn" disabled={loading}>
+            <button type={'submit' as 'submit'} className="auth-btn" disabled={loading}>
               {loading ? (
                 <>
                   <span className="loading-spinner"></span>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, ChangeEvent } from "react";
 import { motion } from "framer-motion";
 import { useMutation } from "@apollo/client";
 import { CREATE_POST, GET_POSTS } from "../graphql/queries";
@@ -64,7 +64,7 @@ const CreatePost = ({ onPostCreated }: CreatePostProps) => {
         <textarea
           className="post-textarea"
           value={content}
-          onChange={(e) => setContent(e.target.value)}
+          onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setContent(e.target.value)}
           placeholder="Share your thoughts..."
           rows={4}
           maxLength={1000}
@@ -73,7 +73,7 @@ const CreatePost = ({ onPostCreated }: CreatePostProps) => {
         <div className="char-count">{content.length}/1000</div>
 
         <button
-          type="button"
+          type={'button' as 'button'}
           className="toggle-advanced"
           onClick={() => setShowAdvanced(!showAdvanced)}
         >
@@ -92,7 +92,7 @@ const CreatePost = ({ onPostCreated }: CreatePostProps) => {
               <input
                 type="url"
                 value={mediaUrl}
-                onChange={(e) => setMediaUrl(e.target.value)}
+                onChange={(e: ChangeEvent<HTMLInputElement>) => setMediaUrl(e.target.value)}
                 placeholder="https://example.com/image.jpg"
                 className="form-input"
               />
@@ -103,7 +103,7 @@ const CreatePost = ({ onPostCreated }: CreatePostProps) => {
                 <label>Content Type</label>
                 <select
                   value={contentType}
-                  onChange={(e) =>
+                  onChange={(e: ChangeEvent<HTMLSelectElement>) =>
                     setContentType(e.target.value as ContentType)
                   }
                   className="form-select"
@@ -121,7 +121,7 @@ const CreatePost = ({ onPostCreated }: CreatePostProps) => {
                 <label>Privacy</label>
                 <select
                   value={privacyLevel}
-                  onChange={(e) =>
+                  onChange={(e: ChangeEvent<HTMLSelectElement>) =>
                     setPrivacyLevel(
                       e.target.value as "public" | "private" | "followers"
                     )
@@ -142,7 +142,7 @@ const CreatePost = ({ onPostCreated }: CreatePostProps) => {
         {error && <div className="error-message">{error.message}</div>}
 
         <button
-          type="submit"
+          type={'submit' as 'submit'}
           className="submit-btn"
           disabled={loading || !content.trim()}
         >
