@@ -1,7 +1,7 @@
-import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { useAuth } from '../context/AuthContext';
-import './Home.css';
+import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
+import { useAuth } from "../context/AuthContext";
+import "./Home.css";
 
 const Home = () => {
   const { user } = useAuth();
@@ -24,17 +24,14 @@ const Home = () => {
 
           <div className="hero-features">
             <div className="feature">
-              <span className="feature-icon">⚡</span>
               <h3>Real-time Updates</h3>
               <p>See posts and interactions as they happen</p>
             </div>
             <div className="feature">
-              <span className="feature-icon">💬</span>
               <h3>Rich Interactions</h3>
               <p>Like, comment, and share with ease</p>
             </div>
             <div className="feature">
-              <span className="feature-icon">🎨</span>
               <h3>Beautiful UI</h3>
               <p>Smooth animations and modern design</p>
             </div>

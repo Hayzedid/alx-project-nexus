@@ -63,6 +63,7 @@ start_servers.bat
 #### Option 2: Manual Start
 
 **Terminal 1 - Backend:**
+
 ```bash
 cd social-media-backend
 python -m venv venv
@@ -73,6 +74,7 @@ python manage.py runserver
 ```
 
 **Terminal 2 - Frontend:**
+
 ```bash
 cd social-media-frontend
 npm install
@@ -84,22 +86,24 @@ npm run dev
 ## 🛠️ Technology Stack
 
 ### Backend
-| Technology | Purpose |
-|------------|---------|
-| Django 5.2 | Web framework |
-| Graphene | GraphQL implementation |
-| SQLite | Database |
-| Django CORS | Cross-origin requests |
+
+| Technology  | Purpose                |
+| ----------- | ---------------------- |
+| Django 5.2  | Web framework          |
+| Graphene    | GraphQL implementation |
+| SQLite      | Database               |
+| Django CORS | Cross-origin requests  |
 
 ### Frontend
-| Technology | Purpose |
-|------------|---------|
-| React 18.2 | UI framework |
-| TypeScript 5.2 | Type safety |
-| Apollo Client 3.8 | GraphQL client |
-| Framer Motion 10.16 | Animations |
-| React Router 6.20 | Navigation |
-| Vite 5.0 | Build tool |
+
+| Technology          | Purpose        |
+| ------------------- | -------------- |
+| React 18.2          | UI framework   |
+| TypeScript 5.2      | Type safety    |
+| Apollo Client 3.8   | GraphQL client |
+| Framer Motion 10.16 | Animations     |
+| React Router 6.20   | Navigation     |
+| Vite 5.0            | Build tool     |
 
 ## 📚 Documentation
 
@@ -112,24 +116,29 @@ npm run dev
 ## 🎯 Key Features Implementation
 
 ### Dynamic Data Loading
+
 GraphQL with Apollo Client for efficient data fetching with automatic caching and optimistic updates.
 
 ### User Interactions
+
 - Like/unlike posts with instant UI feedback
 - Nested comment threads
 - Share functionality
 - Real-time like/comment counts
 
 ### Infinite Scrolling
+
 Intersection Observer API for seamless content loading as user scrolls.
 
 ### Authentication Flow
+
 - Session-based authentication with HTTP-only cookies
 - Protected routes
 - Automatic session persistence
 - Secure logout
 
 ### Responsive Design
+
 - Mobile-first approach
 - Breakpoints for all screen sizes
 - Touch-friendly interactions
@@ -138,6 +147,7 @@ Intersection Observer API for seamless content loading as user scrolls.
 ## 🧪 Testing
 
 The application has been thoroughly tested with:
+
 - ✅ User authentication flow
 - ✅ Post creation and display
 - ✅ Like functionality
@@ -150,12 +160,14 @@ The application has been thoroughly tested with:
 ## 🚢 Deployment
 
 ### Backend (Render/Railway)
+
 ```bash
 cd social-media-backend
 # Follow DEPLOYMENT.md or RENDER_DEPLOYMENT.md
 ```
 
 ### Frontend (Vercel/Netlify)
+
 ```bash
 cd social-media-frontend
 npm run build
@@ -167,6 +179,7 @@ npm run build
 GraphQL endpoint: `http://localhost:8000/graphql/`
 
 ### Key Mutations
+
 - `registerUser` - Create new account
 - `loginUser` - Authenticate user
 - `createPost` - Create new post
@@ -174,6 +187,7 @@ GraphQL endpoint: `http://localhost:8000/graphql/`
 - `createComment` - Add comment
 
 ### Key Queries
+
 - `posts` - Get all posts
 - `feed` - Get personalized feed
 - `me` - Get current user
@@ -184,6 +198,7 @@ Full API documentation available in `BACKEND_CONNECTION_GUIDE.txt`
 ## 🎓 Project Context
 
 Built as the capstone project for the ALX ProDev Frontend Engineering Program, demonstrating:
+
 - Modern web development practices
 - Full-stack application architecture
 - GraphQL API integration
@@ -202,6 +217,7 @@ Built as the capstone project for the ALX ProDev Frontend Engineering Program, d
 ## 📞 Support
 
 For issues, questions, or contributions:
+
 1. Check documentation files
 2. Review START_HERE.md
 3. Check backend/frontend READMEs

@@ -1,15 +1,51 @@
 .create-post {
   background: var(--bg-card);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
   border: 1px solid var(--border-color);
-  border-radius: 12px;
-  padding: 1.5rem;
+  border-radius: var(--radius-lg);
+  padding: 1.75rem;
   margin-bottom: 2rem;
+  box-shadow: var(--shadow-md);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.create-post::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(
+    90deg,
+    var(--primary-color),
+    var(--accent-color),
+    var(--primary-color)
+  );
+  background-size: 200% 100%;
+  animation: shimmer 3s linear infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
 }
 
 .create-post-title {
   font-size: 1.3rem;
   margin-bottom: 1rem;
-  background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+  background: linear-gradient(
+    135deg,
+    var(--primary-color),
+    var(--accent-color)
+  );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -23,22 +59,26 @@
 
 .post-textarea {
   width: 100%;
-  background: rgba(30, 41, 59, 0.5);
-  border: 2px solid var(--border-color);
-  padding: 1rem;
-  border-radius: 12px;
+  background: rgba(10, 15, 30, 0.4);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border: 1.5px solid var(--border-color);
+  padding: 1.25rem;
+  border-radius: var(--radius-md);
   color: var(--text-primary);
   font-size: 1rem;
   resize: vertical;
-  min-height: 100px;
-  transition: all 0.3s;
+  min-height: 120px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   font-family: inherit;
+  line-height: 1.6;
 }
 
 .post-textarea:focus {
   border-color: var(--primary-color);
-  background: rgba(30, 41, 59, 0.7);
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  background: rgba(10, 15, 30, 0.6);
+  box-shadow: 0 0 0 4px rgba(3, 140, 62, 0.1), 0 4px 20px rgba(3, 140, 62, 0.15);
+  transform: translateY(-1px);
 }
 
 .post-textarea::placeholder {
@@ -114,23 +154,47 @@
 }
 
 .submit-btn {
-  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  background: linear-gradient(
+    135deg,
+    var(--primary-color) 0%,
+    var(--secondary-color) 50%,
+    var(--accent-color) 100%
+  );
+  background-size: 200% 200%;
   color: white;
-  padding: 1rem 2rem;
-  border-radius: 12px;
+  padding: 1rem 2.5rem;
+  border-radius: var(--radius-md);
   font-weight: 700;
   font-size: 1rem;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  transition: all 0.3s;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   margin-top: 0.5rem;
+  box-shadow: 0 6px 20px rgba(3, 140, 62, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.submit-btn::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), transparent);
+  opacity: 0;
+  transition: opacity 0.3s;
 }
 
 .submit-btn:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 32px rgba(3, 140, 62, 0.5),
+    0 0 0 1px rgba(12, 242, 93, 0.3);
+  background-position: 100% 0;
+}
+
+.submit-btn:hover:not(:disabled)::after {
+  opacity: 1;
 }
 
 .submit-btn:disabled {

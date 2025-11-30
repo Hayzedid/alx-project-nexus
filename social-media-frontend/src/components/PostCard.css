@@ -1,16 +1,43 @@
 .post-card {
   background: var(--bg-card);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
   border: 1px solid var(--border-color);
-  border-radius: 12px;
-  padding: 1.5rem;
+  border-radius: var(--radius-lg);
+  padding: 1.75rem;
   margin-bottom: 1.5rem;
-  transition: all 0.3s;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: var(--shadow-md);
+  position: relative;
+  overflow: hidden;
+}
+
+.post-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--accent-color),
+    transparent
+  );
+  opacity: 0;
+  transition: opacity 0.4s;
 }
 
 .post-card:hover {
-  border-color: var(--primary-color);
-  box-shadow: 0 8px 30px rgba(102, 126, 234, 0.2);
-  transform: translateY(-2px);
+  border-color: rgba(3, 140, 62, 0.4);
+  box-shadow: 0 12px 40px rgba(3, 140, 62, 0.15),
+    0 0 0 1px rgba(12, 242, 93, 0.1);
+  transform: translateY(-4px);
+}
+
+.post-card:hover::before {
+  opacity: 1;
 }
 
 .post-header {
@@ -46,7 +73,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+  background: linear-gradient(
+    135deg,
+    var(--primary-color),
+    var(--accent-color)
+  );
   font-weight: 700;
   font-size: 1.2rem;
   color: white;
@@ -105,19 +136,47 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  background: rgba(102, 126, 234, 0.1);
+  background: var(--bg-glass);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
   border: 1px solid var(--border-color);
-  padding: 0.5rem 1rem;
-  border-radius: 20px;
+  padding: 0.625rem 1.25rem;
+  border-radius: 100px;
   color: var(--text-secondary);
-  font-weight: 500;
-  transition: all 0.3s;
+  font-weight: 600;
+  font-size: 0.875rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.action-btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 100px;
+  padding: 1px;
+  background: linear-gradient(
+    135deg,
+    var(--primary-color),
+    var(--accent-color)
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.3s;
 }
 
 .action-btn:hover {
-  background: rgba(102, 126, 234, 0.2);
-  border-color: var(--primary-color);
-  color: var(--text-primary);
+  background: rgba(3, 140, 62, 0.1);
+  border-color: transparent;
+  color: var(--accent-color);
+  transform: translateY(-2px);
+}
+
+.action-btn:hover::before {
+  opacity: 1;
 }
 
 .action-btn .icon {
@@ -147,7 +206,7 @@
   position: absolute;
   right: 10px;
   top: -40px;
-  background: linear-gradient(135deg, #038C3E 0%, #0CF25D 100%);
+  background: linear-gradient(135deg, #038c3e 0%, #0cf25d 100%);
   color: white;
   padding: 8px 16px;
   border-radius: 8px;

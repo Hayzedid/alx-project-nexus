@@ -36,16 +36,41 @@
 
 .feature {
   background: var(--bg-card);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
   border: 1px solid var(--border-color);
-  border-radius: 16px;
-  padding: 2rem;
-  transition: all 0.3s;
+  border-radius: var(--radius-lg);
+  padding: 2.25rem;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.feature::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  background: radial-gradient(
+    circle at top,
+    rgba(3, 140, 62, 0.1),
+    transparent 70%
+  );
+  opacity: 0;
+  transition: opacity 0.4s;
 }
 
 .feature:hover {
-  transform: translateY(-5px);
+  transform: translateY(-8px);
   border-color: var(--primary-color);
-  box-shadow: 0 10px 40px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 16px 48px rgba(3, 140, 62, 0.2),
+    0 0 0 1px rgba(12, 242, 93, 0.1);
+}
+
+.feature:hover::before {
+  opacity: 1;
 }
 
 .feature-icon {
@@ -57,7 +82,11 @@
 .feature h3 {
   font-size: 1.3rem;
   margin-bottom: 0.5rem;
-  background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+  background: linear-gradient(
+    135deg,
+    var(--primary-color),
+    var(--accent-color)
+  );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -77,36 +106,64 @@
 }
 
 .cta-btn {
-  padding: 1rem 2.5rem;
-  border-radius: 12px;
+  padding: 1.125rem 2.75rem;
+  border-radius: var(--radius-md);
   font-weight: 700;
   font-size: 1.1rem;
   text-decoration: none;
-  transition: all 0.3s;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
+  position: relative;
+  overflow: hidden;
 }
 
 .cta-btn.primary {
-  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  background: linear-gradient(
+    135deg,
+    var(--primary-color) 0%,
+    var(--secondary-color) 50%,
+    var(--accent-color) 100%
+  );
+  background-size: 200% 200%;
   color: white;
+  box-shadow: 0 8px 24px rgba(3, 140, 62, 0.3);
+}
+
+.cta-btn.primary::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), transparent);
+  opacity: 0;
+  transition: opacity 0.3s;
 }
 
 .cta-btn.primary:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 36px rgba(3, 140, 62, 0.5),
+    0 0 0 1px rgba(12, 242, 93, 0.3);
+  background-position: 100% 0;
+}
+
+.cta-btn.primary:hover::before {
+  opacity: 1;
 }
 
 .cta-btn.secondary {
-  background: transparent;
+  background: var(--bg-glass);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
   border: 2px solid var(--primary-color);
-  color: var(--primary-color);
+  color: var(--accent-color);
 }
 
 .cta-btn.secondary:hover {
   background: var(--primary-color);
   color: white;
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(3, 140, 62, 0.3);
 }
 
 .tech-stack {
@@ -130,20 +187,43 @@
 }
 
 .tech-badge {
-  background: rgba(102, 126, 234, 0.1);
-  border: 1px solid var(--primary-color);
-  color: var(--primary-color);
-  padding: 0.5rem 1.5rem;
-  border-radius: 20px;
+  background: var(--bg-glass);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--border-color);
+  color: var(--accent-color);
+  padding: 0.625rem 1.5rem;
+  border-radius: 100px;
   font-weight: 600;
   font-size: 0.9rem;
-  transition: all 0.3s;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.tech-badge::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 100px;
+  background: linear-gradient(
+    135deg,
+    var(--primary-color),
+    var(--accent-color)
+  );
+  opacity: 0;
+  transition: opacity 0.3s;
+  z-index: -1;
 }
 
 .tech-badge:hover {
-  background: var(--primary-color);
   color: white;
-  transform: translateY(-2px);
+  transform: translateY(-3px);
+  border-color: transparent;
+  box-shadow: 0 6px 20px rgba(3, 140, 62, 0.3);
+}
+
+.tech-badge:hover::before {
+  opacity: 1;
 }
 
 @media (max-width: 768px) {

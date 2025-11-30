@@ -1,10 +1,10 @@
-import { useEffect } from 'react';
-import { useQuery } from '@apollo/client';
-import { motion } from 'framer-motion';
-import { useAuth } from '../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
-import { GET_ME } from '../graphql/queries';
-import './Profile.css';
+import { useEffect } from "react";
+import { useQuery } from "@apollo/client";
+import { motion } from "framer-motion";
+import { useAuth } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
+import { GET_ME } from "../graphql/queries";
+import "./Profile.css";
 
 const Profile = () => {
   const { user, loading: authLoading } = useAuth();
@@ -15,7 +15,7 @@ const Profile = () => {
 
   useEffect(() => {
     if (!authLoading && !user) {
-      navigate('/login');
+      navigate("/login");
     }
   }, [user, authLoading, navigate]);
 
@@ -43,7 +43,10 @@ const Profile = () => {
           <div className="profile-header">
             <div className="profile-avatar">
               {profileData.profilePicture ? (
-                <img src={profileData.profilePicture} alt={profileData.username} />
+                <img
+                  src={profileData.profilePicture}
+                  alt={profileData.username}
+                />
               ) : (
                 <div className="avatar-placeholder">
                   {profileData.username[0].toUpperCase()}
@@ -53,7 +56,9 @@ const Profile = () => {
             <div className="profile-info">
               <h1 className="profile-name">
                 @{profileData.username}
-                {profileData.isVerified && <span className="verified-badge">✓</span>}
+                {profileData.isVerified && (
+                  <span className="verified-badge">Verified</span>
+                )}
               </h1>
               <p className="profile-email">{profileData.email}</p>
             </div>
@@ -71,11 +76,15 @@ const Profile = () => {
               <span className="stat-label">Posts</span>
             </div>
             <div className="stat">
-              <span className="stat-value">{profileData.followersCount || 0}</span>
+              <span className="stat-value">
+                {profileData.followersCount || 0}
+              </span>
               <span className="stat-label">Followers</span>
             </div>
             <div className="stat">
-              <span className="stat-value">{profileData.followingCount || 0}</span>
+              <span className="stat-value">
+                {profileData.followingCount || 0}
+              </span>
               <span className="stat-label">Following</span>
             </div>
           </div>

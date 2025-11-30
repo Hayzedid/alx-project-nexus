@@ -1,13 +1,26 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { useMutation, useQuery } from '@apollo/client';
-import { GET_ME, LOGIN_USER, LOGOUT_USER, REGISTER_USER } from '../graphql/queries';
-import { AuthUser, LoginInput, RegisterInput } from '../types';
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from "react";
+import { useMutation, useQuery } from "@apollo/client";
+import {
+  GET_ME,
+  LOGIN_USER,
+  LOGOUT_USER,
+  REGISTER_USER,
+} from "../graphql/queries";
+import { AuthUser, LoginInput, RegisterInput } from "../types";
 
 interface AuthContextType {
   user: AuthUser | null;
   loading: boolean;
   login: (input: LoginInput) => Promise<{ success: boolean; message: string }>;
-  register: (input: RegisterInput) => Promise<{ success: boolean; message: string }>;
+  register: (
+    input: RegisterInput
+  ) => Promise<{ success: boolean; message: string }>;
   logout: () => Promise<void>;
 }
 
@@ -16,7 +29,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error('useAuth must be used within AuthProvider');
+    throw new Error("useAuth must be used within AuthProvider");
   }
   return context;
 };
@@ -27,6 +40,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const { refetch: refetchMe } = useQuery(GET_ME, {
     skip: true,
+    onError: (error) => {
+      console.log("GraphQL GET_ME error (expected on first load):", error.message);
+      setLoading(false);
+    },
   });
 
   const [loginMutation] = useMutation(LOGIN_USER);
@@ -42,7 +59,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           setUser(data.me);
         }
       } catch (error) {
-        console.log('Not authenticated');
+        console.log("Not authenticated");
       } finally {
         setLoading(false);
       }
@@ -57,9 +74,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setUser(data.loginUser.user);
         return { success: true, message: data.loginUser.message };
       }
-      return { success: false, message: data?.loginUser?.message || 'Login failed' };
+      return {
+        success: false,
+        message: data?.loginUser?.message || "Login failed",
+      };
     } catch (error: any) {
-      return { success: false, message: error.message || 'Login error' };
+      return { success: false, message: error.message || "Login error" };
     }
   };
 
@@ -69,9 +89,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       if (data?.registerUser?.success) {
         return { success: true, message: data.registerUser.message };
       }
-      return { success: false, message: data?.registerUser?.message || 'Registration failed' };
+      return {
+        success: false,
+        message: data?.registerUser?.message || "Registration failed",
+      };
     } catch (error: any) {
-      return { success: false, message: error.message || 'Registration error' };
+      return { success: false, message: error.message || "Registration error" };
     }
   };
 
@@ -80,7 +103,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       await logoutMutation();
       setUser(null);
     } catch (error) {
-      console.error('Logout error:', error);
+      console.error("Logout error:", error);
     }
   };
 

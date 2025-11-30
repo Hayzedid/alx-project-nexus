@@ -1,14 +1,14 @@
-import { useState, useEffect } from 'react';
-import { useQuery } from '@apollo/client';
-import { motion } from 'framer-motion';
-import { useInView } from 'react-intersection-observer';
-import { useAuth } from '../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
-import { GET_POSTS } from '../graphql/queries';
-import { Post } from '../types';
-import CreatePost from '../components/CreatePost';
-import PostCard from '../components/PostCard';
-import './Feed.css';
+import { useState, useEffect } from "react";
+import { useQuery } from "@apollo/client";
+import { motion } from "framer-motion";
+import { useInView } from "react-intersection-observer";
+import { useAuth } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
+import { GET_POSTS } from "../graphql/queries";
+import { Post } from "../types";
+import CreatePost from "../components/CreatePost";
+import PostCard from "../components/PostCard";
+import "./Feed.css";
 
 const Feed = () => {
   const { user, loading: authLoading } = useAuth();
@@ -27,7 +27,7 @@ const Feed = () => {
 
   useEffect(() => {
     if (!authLoading && !user) {
-      navigate('/login');
+      navigate("/login");
     }
   }, [user, authLoading, navigate]);
 
@@ -59,7 +59,7 @@ const Feed = () => {
         setHasMore(false);
       }
     } catch (err) {
-      console.error('Error loading more posts:', err);
+      console.error("Error loading more posts:", err);
     }
   };
 
@@ -85,7 +85,9 @@ const Feed = () => {
       <div className="container">
         <div className="feed-header">
           <h1 className="gradient-text">Your Feed</h1>
-          <p className="feed-subtitle">Stay connected with the latest updates</p>
+          <p className="feed-subtitle">
+            Stay connected with the latest updates
+          </p>
         </div>
 
         <CreatePost onPostCreated={handlePostCreated} />
@@ -113,7 +115,11 @@ const Feed = () => {
           ) : (
             <>
               {posts.map((post, index) => (
-                <PostCard key={`${post.id}-${index}`} post={post} onUpdate={handlePostCreated} />
+                <PostCard
+                  key={`${post.id}-${index}`}
+                  post={post}
+                  onUpdate={handlePostCreated}
+                />
               ))}
 
               {hasMore && (

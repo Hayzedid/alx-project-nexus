@@ -1,11 +1,16 @@
-import { useState } from 'react';
-import { motion } from 'framer-motion';
-import { useMutation } from '@apollo/client';
-import { LIKE_POST, CREATE_COMMENT, SHARE_POST, GET_POST_COMMENTS } from '../graphql/queries';
-import { Post } from '../types';
-import { useAuth } from '../context/AuthContext';
-import CommentSection from './CommentSection';
-import './PostCard.css';
+import { useState } from "react";
+import { motion } from "framer-motion";
+import { useMutation } from "@apollo/client";
+import {
+  LIKE_POST,
+  CREATE_COMMENT,
+  SHARE_POST,
+  GET_POST_COMMENTS,
+} from "../graphql/queries";
+import { Post } from "../types";
+import { useAuth } from "../context/AuthContext";
+import CommentSection from "./CommentSection";
+import "./PostCard.css";
 
 interface PostCardProps {
   post: Post;
@@ -27,7 +32,7 @@ const PostCard = ({ post, onUpdate }: PostCardProps) => {
 
   const handleLike = async () => {
     if (!user) {
-      alert('Please login to like posts');
+      alert("Please login to like posts");
       return;
     }
 
@@ -38,20 +43,22 @@ const PostCard = ({ post, onUpdate }: PostCardProps) => {
         setLikesCount((prev) => (data.likePost.isLiked ? prev + 1 : prev - 1));
       }
     } catch (error) {
-      console.error('Like error:', error);
+      console.error("Like error:", error);
     }
   };
 
   const handleComment = async (content: string) => {
     if (!user) {
-      alert('Please login to comment');
+      alert("Please login to comment");
       return;
     }
 
     try {
       const { data } = await createComment({
         variables: { input: { postId: post.id, content } },
-        refetchQueries: [{ query: GET_POST_COMMENTS, variables: { postId: post.id } }],
+        refetchQueries: [
+          { query: GET_POST_COMMENTS, variables: { postId: post.id } },
+        ],
       });
 
       if (data?.createComment?.success) {
@@ -59,13 +66,13 @@ const PostCard = ({ post, onUpdate }: PostCardProps) => {
         onUpdate?.();
       }
     } catch (error) {
-      console.error('Comment error:', error);
+      console.error("Comment error:", error);
     }
   };
 
   const handleShare = async () => {
     if (!user) {
-      alert('Please login to share posts');
+      alert("Please login to share posts");
       return;
     }
 
@@ -76,7 +83,9 @@ const PostCard = ({ post, onUpdate }: PostCardProps) => {
       try {
         await navigator.share({
           title: `Post by @${post.author.username}`,
-          text: post.content.substring(0, 100) + (post.content.length > 100 ? '...' : ''),
+          text:
+            post.content.substring(0, 100) +
+            (post.content.length > 100 ? "..." : ""),
           url: postUrl,
         });
 
@@ -87,7 +96,7 @@ const PostCard = ({ post, onUpdate }: PostCardProps) => {
         }
       } catch (error) {
         // User cancelled share or error occurred
-        console.log('Share cancelled or failed:', error);
+        console.log("Share cancelled or failed:", error);
       }
     } else {
       // Fallback: Copy to clipboard
@@ -102,8 +111,8 @@ const PostCard = ({ post, onUpdate }: PostCardProps) => {
           setSharesCount(data.sharePost.sharesCount);
         }
       } catch (error) {
-        console.error('Share error:', error);
-        alert('Failed to copy link');
+        console.error("Share error:", error);
+        alert("Failed to copy link");
       }
     }
   };
@@ -116,7 +125,7 @@ const PostCard = ({ post, onUpdate }: PostCardProps) => {
     const diffHours = Math.floor(diffMins / 60);
     const diffDays = Math.floor(diffHours / 24);
 
-    if (diffMins < 1) return 'Just now';
+    if (diffMins < 1) return "Just now";
     if (diffMins < 60) return `${diffMins}m ago`;
     if (diffHours < 24) return `${diffHours}h ago`;
     if (diffDays < 7) return `${diffDays}d ago`;
@@ -134,9 +143,14 @@ const PostCard = ({ post, onUpdate }: PostCardProps) => {
         <div className="post-author">
           <div className="author-avatar">
             {post.author.profilePicture ? (
-              <img src={post.author.profilePicture} alt={post.author.username} />
+              <img
+                src={post.author.profilePicture}
+                alt={post.author.username}
+              />
             ) : (
-              <div className="avatar-placeholder">{post.author.username[0].toUpperCase()}</div>
+              <div className="avatar-placeholder">
+                {post.author.username[0].toUpperCase()}
+              </div>
             )}
           </div>
           <div className="author-info">
@@ -150,9 +164,9 @@ const PostCard = ({ post, onUpdate }: PostCardProps) => {
         <p>{post.content}</p>
         {post.mediaUrl && (
           <div className="post-media">
-            {post.contentType === 'image' || post.contentType === 'mixed' ? (
+            {post.contentType === "image" || post.contentType === "mixed" ? (
               <img src={post.mediaUrl} alt="Post media" />
-            ) : post.contentType === 'video' ? (
+            ) : post.contentType === "video" ? (
               <video src={post.mediaUrl} controls />
             ) : null}
           </div>
@@ -161,13 +175,13 @@ const PostCard = ({ post, onUpdate }: PostCardProps) => {
 
       <div className="post-actions">
         <motion.button
-          className={`action-btn like-btn ${isLiked ? 'liked' : ''}`}
+          className={`action-btn like-btn ${isLiked ? "liked" : ""}`}
           onClick={handleLike}
           disabled={liking}
           whileTap={{ scale: 0.9 }}
           whileHover={{ scale: 1.1 }}
         >
-          <span className="icon">{isLiked ? '❤️' : '🤍'}</span>
+          <span className="icon">{isLiked ? "♥" : "♡"}</span>
           <span className="count">{likesCount}</span>
         </motion.button>
 
@@ -177,8 +191,7 @@ const PostCard = ({ post, onUpdate }: PostCardProps) => {
           whileTap={{ scale: 0.9 }}
           whileHover={{ scale: 1.05 }}
         >
-          <span className="icon">💬</span>
-          <span className="count">{commentsCount}</span>
+          <span className="count">{commentsCount} Comments</span>
         </motion.button>
 
         <motion.button
@@ -188,8 +201,7 @@ const PostCard = ({ post, onUpdate }: PostCardProps) => {
           whileTap={{ scale: 0.9 }}
           whileHover={{ scale: 1.05 }}
         >
-          <span className="icon">🔗</span>
-          <span className="count">{sharesCount}</span>
+          <span className="count">Share ({sharesCount})</span>
         </motion.button>
 
         {showShareSuccess && (
@@ -199,7 +211,7 @@ const PostCard = ({ post, onUpdate }: PostCardProps) => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
           >
-            ✓ Link copied to clipboard!
+            Link copied to clipboard!
           </motion.div>
         )}
       </div>

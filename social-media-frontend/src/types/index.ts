@@ -36,8 +36,8 @@ export interface Post {
   };
 }
 
-export type ContentType = 'text' | 'image' | 'video' | 'mixed';
-export type PrivacyLevel = 'public' | 'followers' | 'private';
+export type ContentType = "text" | "image" | "video" | "mixed";
+export type PrivacyLevel = "public" | "followers" | "private";
 
 // Comment Types
 export interface Comment {

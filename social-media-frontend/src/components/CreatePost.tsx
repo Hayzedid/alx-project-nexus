@@ -1,19 +1,19 @@
-import { useState } from 'react';
-import { motion } from 'framer-motion';
-import { useMutation } from '@apollo/client';
-import { CREATE_POST, GET_POSTS } from '../graphql/queries';
-import { ContentType, PrivacyLevel } from '../types';
-import './CreatePost.css';
+import { useState } from "react";
+import { motion } from "framer-motion";
+import { useMutation } from "@apollo/client";
+import { CREATE_POST, GET_POSTS } from "../graphql/queries";
+import { ContentType, PrivacyLevel } from "../types";
+import "./CreatePost.css";
 
 interface CreatePostProps {
   onPostCreated?: () => void;
 }
 
 const CreatePost = ({ onPostCreated }: CreatePostProps) => {
-  const [content, setContent] = useState('');
-  const [contentType, setContentType] = useState<ContentType>('text');
-  const [privacyLevel, setPrivacyLevel] = useState<PrivacyLevel>('public');
-  const [mediaUrl, setMediaUrl] = useState('');
+  const [content, setContent] = useState("");
+  const [contentType, setContentType] = useState<ContentType>("text");
+  const [privacyLevel, setPrivacyLevel] = useState<PrivacyLevel>("public");
+  const [mediaUrl, setMediaUrl] = useState("");
   const [showAdvanced, setShowAdvanced] = useState(false);
 
   const [createPost, { loading, error }] = useMutation(CREATE_POST, {
@@ -24,7 +24,7 @@ const CreatePost = ({ onPostCreated }: CreatePostProps) => {
     e.preventDefault();
 
     if (!content.trim()) {
-      alert('Please enter some content');
+      alert("Please enter some content");
       return;
     }
 
@@ -41,13 +41,13 @@ const CreatePost = ({ onPostCreated }: CreatePostProps) => {
       });
 
       if (data?.createPost?.success) {
-        setContent('');
-        setMediaUrl('');
+        setContent("");
+        setMediaUrl("");
         setShowAdvanced(false);
         onPostCreated?.();
       }
     } catch (err) {
-      console.error('Create post error:', err);
+      console.error("Create post error:", err);
     }
   };
 
@@ -70,23 +70,21 @@ const CreatePost = ({ onPostCreated }: CreatePostProps) => {
           maxLength={1000}
         />
 
-        <div className="char-count">
-          {content.length}/1000
-        </div>
+        <div className="char-count">{content.length}/1000</div>
 
         <button
           type="button"
           className="toggle-advanced"
           onClick={() => setShowAdvanced(!showAdvanced)}
         >
-          {showAdvanced ? '− Hide Options' : '+ More Options'}
+          {showAdvanced ? "− Hide Options" : "+ More Options"}
         </button>
 
         {showAdvanced && (
           <motion.div
             className="advanced-options"
             initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
+            animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
           >
             <div className="form-group">
@@ -105,7 +103,9 @@ const CreatePost = ({ onPostCreated }: CreatePostProps) => {
                 <label>Content Type</label>
                 <select
                   value={contentType}
-                  onChange={(e) => setContentType(e.target.value as ContentType)}
+                  onChange={(e) =>
+                    setContentType(e.target.value as ContentType)
+                  }
                   className="form-select"
                   aria-label="Content type"
                   title="Select content type"
@@ -121,7 +121,11 @@ const CreatePost = ({ onPostCreated }: CreatePostProps) => {
                 <label>Privacy</label>
                 <select
                   value={privacyLevel}
-                  onChange={(e) => setPrivacyLevel(e.target.value as 'public' | 'private' | 'followers')}
+                  onChange={(e) =>
+                    setPrivacyLevel(
+                      e.target.value as "public" | "private" | "followers"
+                    )
+                  }
                   className="privacy-select"
                   aria-label="Privacy level"
                   title="Select privacy level"
@@ -148,10 +152,7 @@ const CreatePost = ({ onPostCreated }: CreatePostProps) => {
               Posting...
             </>
           ) : (
-            <>
-              <span>🚀</span>
-              Post
-            </>
+            "Post"
           )}
         </button>
       </form>

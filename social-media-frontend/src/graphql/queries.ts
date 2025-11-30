@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client';
+import { gql } from "@apollo/client";
 
 // User Fragments
 export const USER_FRAGMENT = gql`
